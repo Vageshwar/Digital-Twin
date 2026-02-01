@@ -73,25 +73,41 @@ async def run_mcp_tool(tool_name: str, arguments: dict) -> str:
             # Unwrap JSON-RPC → tool result
             # -------------------------------------------------------------------
             if "error" in rpc:
-                return f"MCP error: {rpc['error'].get('message', rpc['error'])}"
+                error_msg = f"MCP error: {rpc['error'].get('message', rpc['error'])}"
+                print(f"[MCP Client] Error: {error_msg}")
+                return error_msg
 
             result = rpc.get("result", {})
+            print(f"[MCP Client] Raw result type: {type(result)}")
+            print(f"[MCP Client] Raw result: {json.dumps(result, indent=2) if not isinstance(result, str) else result[:200]}")
 
-            # LeanMCP wraps tool output in { content: [{ type: "text", text: "..." }] }
+            # Handle different response formats:
+            # 1. Plain string (new format from updated tools)
+            if isinstance(result, str):
+                print(f"[MCP Client] Returning plain string: {result[:100]}...")
+                return result
+            
+            # 2. Object with 'content' array (old MCP format)
             content_blocks = result.get("content", [])
             if content_blocks and isinstance(content_blocks, list):
                 # Grab the first text block
                 for block in content_blocks:
                     if isinstance(block, dict) and block.get("type") == "text":
-                        return block["text"]
-
-            # Fallback: if result is a bare string or something else, stringify it
-            if isinstance(result, str):
-                return result
-            return json.dumps(result)
+                        text = block["text"]
+                        print(f"[MCP Client] Returning from content block: {text[:100]}...")
+                        return text
+            
+            # 3. Fallback: stringify whatever we got
+            fallback = json.dumps(result)
+            print(f"[MCP Client] Fallback stringify: {fallback[:100]}...")
+            return fallback
 
     except Exception as e:
-        return f"MCP tool execution failed: {str(e)}"
+        error_msg = f"MCP tool execution failed: {str(e)}"
+        print(f"[MCP Client] Exception: {error_msg}")
+        import traceback
+        traceback.print_exc()
+        return error_msg
 
 
 # ---------------------------------------------------------------------------

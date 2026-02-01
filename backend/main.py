@@ -107,16 +107,21 @@ Keep replies concise, technical, and immersive.  You are the gatekeeper."""
 #
 # Matches:  TOOL:github_search|ARGS:{"query":"react"}
 # Groups:   (1) tool name   (2) JSON args string
+#
+# Updated to search anywhere in the text (not just at start) to handle cases
+# where the LLM adds prose before/after the tool call.
 # ---------------------------------------------------------------------------
-TOOL_PATTERN = re.compile(r"^TOOL:(\w+)\|ARGS:(\{.*\})$", re.DOTALL)
+TOOL_PATTERN = re.compile(r"TOOL:(\w+)\|ARGS:(\{[^}]*\})", re.DOTALL)
 
 
 def parse_tool_call(text: str):
     """
-    If `text` is a tool-call line, return (tool_name, args_dict).
+    If `text` contains a tool-call pattern, return (tool_name, args_dict).
     Otherwise return None.
+    
+    Searches for TOOL:name|ARGS:{...} anywhere in the text.
     """
-    match = TOOL_PATTERN.match(text.strip())
+    match = TOOL_PATTERN.search(text.strip())
     if not match:
         return None
     tool_name = match.group(1)
@@ -201,9 +206,20 @@ async def websocket_endpoint(websocket: WebSocket):
             else:
                 # ── Tool call detected ─────────────────────────────────────
                 tool_name, tool_args = parsed
+                
+                # Extract any prose that came before the TOOL: line
+                # This handles cases where LLM says something like:
+                # "Let me check that for you. TOOL:github_search|ARGS:{...}"
+                tool_match = TOOL_PATTERN.search(pass1_text)
+                prose_before = pass1_text[:tool_match.start()].strip() if tool_match else ""
+                
+                # If there's prose before the tool call, show it to the user
+                if prose_before:
+                    await websocket.send_json({"type": "token", "content": prose_before + "\n\n"})
+                
                 await websocket.send_json({
                     "type": "log",
-                    "message": f"Executing: {tool_name}({json.dumps(tool_args)})",
+                    "message": f"🔧 Executing: {tool_name}({json.dumps(tool_args)})",
                 })
 
                 # Execute the tool via MCP
@@ -211,12 +227,13 @@ async def websocket_endpoint(websocket: WebSocket):
 
                 await websocket.send_json({
                     "type": "log",
-                    "message": "Tool execution complete.",
+                    "message": "✅ Tool execution complete.",
                 })
 
                 # Append the assistant's tool-call turn and the result to history.
                 # We use a simple user-turn message for the result because Llama
                 # doesn't understand the OpenAI "tool" role.
+                # Store the full text (including TOOL: line) in history for context
                 history.append({"role": "assistant", "content": pass1_text})
                 history.append({
                     "role": "user",
