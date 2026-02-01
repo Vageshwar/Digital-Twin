@@ -3,6 +3,9 @@ import AudioVisualizer from './components/AudioVisualizer';
 import LogStream from './components/LogStream';
 import Chat from './components/Chat';
 
+// const API_URL = 'http://localhost:8000';
+const API_URL = 'https://digital-twin-37am.onrender.com';
+
 // Mock logs generator
 const generateLog = (msg: string) => ({
   id: Math.random().toString(36).substr(2, 9),
@@ -16,7 +19,7 @@ function App() {
 
   useEffect(() => {
     // Connect to WebSocket on mount
-    ws.current = new WebSocket('ws://localhost:8000/ws/chat');
+    ws.current = new WebSocket(`${API_URL}/ws/chat`);
 
     ws.current.onopen = () => {
       addLog('Neural Link Established.');
