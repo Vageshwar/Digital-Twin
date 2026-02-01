@@ -4,22 +4,27 @@
   "description": "MCP Server: GitHub, Calendar, Discord tools for Vageshwar's Digital Twin",
   "main": "dist/index.js",
   "scripts": {
+    "start": "node dist/main.js",
+    "dev": "tsx main.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "build:run": "npm run build && npm run start",
-    "dev": "ts-node --esm src/index.ts",
-    "test": "node src/test.mjs"
+    "build:run": "npm run build && npm start"
   },
   "type": "module",
   "dependencies": {
+    "@leanmcp/core": "^0.4.7",
     "@modelcontextprotocol/sdk": "^1.9.0",
+    "cors": "^2.8.6",
     "dotenv": "^16.4.7",
+    "express": "^5.2.1",
     "googleapis": "^171.0.0",
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/node": "^22.0.0",
     "ts-node": "^10.5.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "tsx": "^4.7.0"
   }
 }
