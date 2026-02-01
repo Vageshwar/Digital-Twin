@@ -1,30 +1,25 @@
 {
-    "name": "founderos-mcp-server",
-    "version": "1.0.0",
-    "description": "LeanMCP server for FounderOS",
-    "main": "build/index.js",
-    "scripts": {
-        "build": "tsc",
-        "start": "node build/index.js"
-    },
-    "dependencies": {
-        "@hono/node-server": "^1.19.9",
-        "@leanmcp/cli": "^0.5.6",
-        "@leanmcp/core": "^0.4.7",
-        "@modelcontextprotocol/sdk": "^1.0.0",
-        "@octokit/rest": "^22.0.1",
-        "@types/cors": "^2.8.19",
-        "@types/express": "^5.0.6",
-        "axios": "^1.13.4",
-        "cors": "^2.8.6",
-        "dotenv": "^17.2.3",
-        "express": "^5.2.1",
-        "googleapis": "^171.0.0",
-        "hono": "^4.11.7",
-        "zod": "^3.0.0"
-    },
-    "devDependencies": {
-        "@types/node": "^20.0.0",
-        "typescript": "^5.0.0"
-    }
+  "name": "vageshwar-twin-mcp",
+  "version": "1.0.0",
+  "description": "MCP Server: GitHub, Calendar, Discord tools for Vageshwar's Digital Twin",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "build:run": "npm run build && npm run start",
+    "dev": "ts-node --esm src/index.ts",
+    "test": "node src/test.mjs"
+  },
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "dotenv": "^16.4.7",
+    "googleapis": "^171.0.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.5.0",
+    "typescript": "^5.6.0"
+  }
 }

@@ -46,3 +46,7 @@ pnpm-debug.log*
 
 # Agentic Files
 .agent/
+
+# Common
+**/node_modules
+**/.env
