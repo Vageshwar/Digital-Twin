@@ -1,0 +1,48 @@
+# System & IDEs
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.bak
+
+# Environment Variables & Secrets
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+google_key.json
+*.pem
+*.key
+
+# Dependencies & Build Outputs
+node_modules/
+dist/
+build/
+coverage/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.pytest_cache/
+.mypy_cache/
+
+# Node logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Frameworks / Next.js / Vite
+.next/
+.serverless/
+.fusebox/
+.dynamodb/
+
+# Agentic Files
+.agent/
