@@ -1,0 +1,105 @@
+VAGESHWAR YADAV SDE-2 @ Muoro | Full Stack Developer | MERN Stack Expert
+
+CONTACT INFORMATION
+
+Phone: +91-8237342691
+
+Email: Vageshwaryadav@gmail.com
+
+Links: LinkedIn | GitHub | Website
+
+PROFESSIONAL SUMMARY Award-winning innovator and Full Stack Developer specializing in the MERN stack. Experienced in microservices architecture, process optimization, and AI integration. Proven track record in reducing deployment times, migrating architectures, and leading teams.
+
+EDUCATION
+
+B. Tech in Computer Science & Engineering (9.53 GPA)
+
+KIT's College of Engineering, Maharashtra | 2021
+
+AWARDS
+
+Tech Conqueror Award: inFeedo (Outstanding engineering contributions).
+
+Brown Belt Status: inFeedo (Surpassed expectations, increased customer satisfaction/revenue by 25%).
+
+Best Problem Solver Award: Deshpande Startups Virtual Hackathon (Sept 2020).
+
+TECHNICAL SKILLS
+
+Languages: JavaScript (React, Node.js), Python, Flutter, TypeScript.
+
+Frontend: React, Sass, Webpack, Next.js, React Query, React Hook Forms, Highcharts.
+
+Backend: Node.js, Express.js, AWS Lambda, Python.
+
+Databases: MySQL, Prisma (ORM), Redis.
+
+Cloud & DevOps: AWS Lambda, Build Optimization, Deployment Automation, Service Workers, Caching Strategies.
+
+AI: OpenAI GPT-4 API Integration, Chatbot Development.
+
+Mobile: Flutter, Android Studio, React Native.
+
+Tools: Git, Power BI, Outsystems.
+
+Concepts: RESTful APIs, Microservices, Agile, SSO (SAML/JWT), Data Visualization.
+
+WORK EXPERIENCE
+
+SDE-2 Muoro (NeucleusX) | Oct 2024 - Present
+
+Tech Stack: Next.js, TypeScript, Python, React Query, React Hook Forms.
+
+Fintech Product Development: Developing core product for a US-based fintech startup in stealth mode; focusing on robust/scalable architecture.
+
+Agile Collaboration: Collaborating with 20 engineers to coordinate back-end and front-end functionalities in rapid cycles.
+
+Full Stack Implementation: Using Next.js for server-rendered pages and Python for back-end integrations to optimize performance.
+
+Advanced Forms: Utilizing React Hook Forms for complex data collection and validation.
+
+Feedback Integration: Designing feedback loops to align product with user needs.
+
+SOFTWARE DEVELOPER inFeedo, Remote | Dec 2021 - Oct 2024
+
+Performance Optimization: Reduced build size from 10 MB to 4 MB and cut deployment time from 45 mins to 7 mins via Sass/Webpack optimization and lazy loading.
+
+AI Development: Built 'Lens,' a ChatGPT-like tool for HR admins using React, Node.js, Prisma, and GPT-4 APIs.
+
+Design System: Developed a new design system for consistent UI/UX and reusable components.
+
+Chatbot Enhancement: Added support for image-based questions and translation libraries.
+
+Reporting Features: Developed 'Engagement Summary' reports using AWS Lambda and Redis.
+
+Architecture Migration: Contributed to migration from monolithic to microservices (Reporting & Hierarchy Engines).
+
+Frontend Dev: Built 'Ticketing Manager' dashboards using React and Highcharts.
+
+SSO: Implemented Single Sign-On (SSO) for Zendesk Widget.
+
+Leadership: Led a team of two, gaining managerial experience.
+
+GRADUATE ENGINEER TRAINEE Adani Enterprise Pvt. Ltd., Ahmedabad | Jun 2021 - Dec 2021
+
+E-Auction Platform: Led a team to develop an e-auction platform hosting 3 auctions for 1,747 candidates.
+
+Security (MFA): Implemented RSA-based MFA for 25,000 employees and created Power BI reports for CXOs.
+
+Automation: Automated data entry using Python; developed budget tools with React/Node/MySQL.
+
+SOFTWARE INTERN Bentley Systems | Jan 2021 - Jun 2021
+
+Bug Fixes: Fixed broken PDF/HTML export features for Open Tower Desktop.
+
+Cloud Migration: Moved tower calculation API from desktop to OpenTower Cloud.
+
+Feature Dev: Added a Layers panel using iTwinJs for tower layer interaction.
+
+ENGINEER INTERN (SOLO DEV) Menon and Menon Private Ltd. | Sep 2020 - Dec 2020
+
+Mobile App: Created and presented a functional Android app prototype using Flutter and Firebase.
+
+Full Lifecycle: Handled architectural design, tech stack selection, OTP authentication, and UI development.
+
+Consulting: Advised new engineers on technical decisions post-prototype.

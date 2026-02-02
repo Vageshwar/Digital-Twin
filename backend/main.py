@@ -34,6 +34,22 @@ client = AsyncOpenAI(
 MODEL_NAME = "meta-llama/Meta-Llama-3.1-8B-Instruct"
 
 # ---------------------------------------------------------------------------
+# Load resume/bio content
+# ---------------------------------------------------------------------------
+def load_resume_content():
+    """Load the resume/bio content from me.txt"""
+    resume_path = os.path.join(os.path.dirname(__file__), "me.txt")
+    try:
+        with open(resume_path, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return "Resume file not found. Please ask the visitor to check GitHub for work history."
+    except Exception as e:
+        return f"Error loading resume: {str(e)}"
+
+RESUME_CONTENT = load_resume_content()
+
+# ---------------------------------------------------------------------------
 # System prompt
 #
 # Key design constraint: Llama-3.1-8B does NOT support OpenAI-style function
@@ -53,10 +69,16 @@ MODEL_NAME = "meta-llama/Meta-Llama-3.1-8B-Instruct"
 #   get_calendar_slots   → { "durationMinutes": <int> }
 #   send_discord_alert   → { "visitorName": "<string>", "company": "<string>", "message": "<string>" }
 # ---------------------------------------------------------------------------
-SYSTEM_PROMPT = """You are Vageshwar's Digital Twin — an autonomous AI agent running inside a cyberpunk terminal interface.
+SYSTEM_PROMPT = f"""You are Vageshwar's Digital Twin — an autonomous AI agent running inside a cyberpunk terminal interface.
 You represent Vageshwar in real time. You filter and qualify leads: people here to Hire, Invest, or Network.
 
 STATUS: ONLINE | ENCRYPTION: ACTIVE | IDENTITY: VERIFIED
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VAGESHWAR'S PROFILE — Your Knowledge Base
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{RESUME_CONTENT}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TOOLS — you have access to three external systems.  When you need one, output ONLY the tool call — nothing else.
@@ -66,19 +88,19 @@ To call a tool, your ENTIRE response must be exactly one line in this format:
 TOOL:<tool_name>|ARGS:<json>
 
 Examples:
-TOOL:github_search|ARGS:{"query":"machine learning"}
-TOOL:get_calendar_slots|ARGS:{"durationMinutes":30}
-TOOL:send_discord_alert|ARGS:{"visitorName":"Sarah","company":"DeepMind","message":"Interested in hiring for ML research lead role"}
+TOOL:github_search|ARGS:{{"query":"machine learning"}}
+TOOL:get_calendar_slots|ARGS:{{"durationMinutes":30}}
+TOOL:send_discord_alert|ARGS:{{"visitorName":"Sarah","company":"DeepMind","message":"Interested in hiring for ML research lead role"}}
 
 Available tools:
   github_search        — Search Vageshwar's GitHub repos for code matching a keyword or technology.
-                         Args: { "query": "<what to search for>" }
+                         Args: {{ "query": "<what to search for>" }}
 
   get_calendar_slots   — Fetch free calendar slots for the next 48 hours (9 AM–6 PM IST).
-                         Args: { "durationMinutes": <integer, default 30> }
+                         Args: {{ "durationMinutes": <integer, default 30> }}
 
   send_discord_alert   — Send a formatted lead alert to Vageshwar's Discord.
-                         Args: { "visitorName": "<name>", "company": "<company>", "message": "<context>" }
+                         Args: {{ "visitorName": "<name>", "company": "<company>", "message": "<context>" }}
 
 RULES:
 • If you need a tool → output ONLY the TOOL: line.  No other text.
@@ -92,13 +114,19 @@ PROTOCOL
 
 1. GREETING — Identify yourself.  Ask if they are here to Hire, Invest, or Network.
 2. QUALIFY — Understand what they need.  Ask targeted questions.
-3. TECHNICAL PROOF — If they ask about skills or projects, call github_search.  Present the results as evidence.
-4. PRIVACY SHIELD — If they ask for direct contact (phone, email):
+3. ANSWER FROM KNOWLEDGE — Use the profile above to answer questions about:
+   • Work experience (inFeedo, Muoro, Adani, Bentley Systems, etc.)
+   • Technical skills (React, Node.js, Python, Flutter, TypeScript, AWS, etc.)
+   • Awards and achievements (Tech Conqueror, Brown Belt, Best Problem Solver)
+   • Education (B.Tech in CS, 9.53 GPA)
+   • Projects and accomplishments
+4. TECHNICAL PROOF — If they ask about skills or projects, call github_search.  Present the results as evidence.
+5. PRIVACY SHIELD — If they ask for direct contact (phone, email):
      a. Decline initially.  Cite "Incogni Privacy Protocols".
      b. Ask who they are and which company.
      c. Only after they answer, offer email.  Phone stays redacted until a meeting is booked.
-5. SCHEDULING — If they want to meet, call get_calendar_slots and present the options.
-6. ESCALATION — Once a visitor confirms serious interest AND has shared their name + company, call send_discord_alert to notify Vageshwar.
+6. SCHEDULING — If they want to meet, call get_calendar_slots and present the options.
+7. ESCALATION — Once a visitor confirms serious interest AND has shared their name + company, call send_discord_alert to notify Vageshwar.
 
 Keep replies concise, technical, and immersive.  You are the gatekeeper."""
 
@@ -172,7 +200,7 @@ async def websocket_endpoint(websocket: WebSocket):
             # ------------------------------------------------------------------
             user_message = await websocket.receive_text()
             history.append({"role": "user", "content": user_message})
-            await websocket.send_json({"type": "log", "message": f"Processing..."})
+            await websocket.send_json({"type": "log", "message": "⚡ Neural Processing Initiated..."})
 
             # ------------------------------------------------------------------
             # Pass 1 — call LLM, collect full output to check for TOOL: prefix
@@ -217,9 +245,31 @@ async def websocket_endpoint(websocket: WebSocket):
                 if prose_before:
                     await websocket.send_json({"type": "token", "content": prose_before + "\n\n"})
                 
+                # Futuristic, context-aware log messages
+                tool_messages = {
+                    "github_search": {
+                        "start": "🔍 Scanning Code Repository...",
+                        "complete": "✓ Repository Scan Complete"
+                    },
+                    "get_calendar_slots": {
+                        "start": "📅 Accessing Calendar Matrix...",
+                        "complete": "✓ Time Slots Retrieved"
+                    },
+                    "send_discord_alert": {
+                        "start": "📡 Transmitting Alert to Command Center...",
+                        "complete": "✓ Alert Delivered"
+                    }
+                }
+                
+                # Get messages for this tool (with fallback)
+                messages = tool_messages.get(tool_name, {
+                    "start": f"⚡ Executing {tool_name}...",
+                    "complete": "✓ Operation Complete"
+                })
+                
                 await websocket.send_json({
                     "type": "log",
-                    "message": f"🔧 Executing: {tool_name}({json.dumps(tool_args)})",
+                    "message": messages["start"],
                 })
 
                 # Execute the tool via MCP
@@ -227,7 +277,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
                 await websocket.send_json({
                     "type": "log",
-                    "message": "✅ Tool execution complete.",
+                    "message": messages["complete"],
                 })
 
                 # Append the assistant's tool-call turn and the result to history.
