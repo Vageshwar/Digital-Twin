@@ -204,7 +204,7 @@ const ServerHealthCheck: React.FC<ServerHealthCheckProps> = ({
                                     setRetryCount(0);
                                     setStatus('checking');
                                 }}
-                                className="mt-6 px-6 py-3 bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg font-semibold transition-colors"
+                                className="mt-6 px-6 py-3 bg-primary hover:bg-primary/80 text-black rounded-lg font-semibold transition-colors"
                             >
                                 Retry Connection
                             </motion.button>
