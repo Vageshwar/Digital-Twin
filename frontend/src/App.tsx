@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AudioVisualizer from './components/AudioVisualizer';
 import LogStream from './components/LogStream';
 import Chat from './components/Chat';
+import ServerHealthCheck from './components/ServerHealthCheck';
 
 // const API_URL = 'http://localhost:8000';
 const API_URL = 'https://digital-twin-37am.onrender.com';
@@ -13,7 +14,7 @@ const generateLog = (msg: string) => ({
   timestamp: new Date().toLocaleTimeString(),
 });
 
-function App() {
+function MainApp() {
   // WebSocket Reference
   const ws = React.useRef<WebSocket | null>(null);
 
@@ -118,4 +119,22 @@ function App() {
   );
 }
 
+function App() {
+  const [serverReady, setServerReady] = useState(false);
+
+  if (!serverReady) {
+    return (
+      <ServerHealthCheck
+        apiUrl={API_URL}
+        onServerReady={() => setServerReady(true)}
+        maxRetries={18}  // 18 retries * 10 seconds = 3 minutes
+        retryInterval={10000}  // 10 seconds
+      />
+    );
+  }
+
+  return <MainApp />;
+}
+
 export default App;
+
